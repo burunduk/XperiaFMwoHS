@@ -9,13 +9,21 @@ import de.robv.android.xposed.XC_MethodReplacement;
 public class XperiaFMwoHS implements IXposedHookLoadPackage {
 	public void handleLoadPackage(final LoadPackageParam lpparam)
 			throws Throwable {
-		if (!lpparam.packageName.equals("com.sonyericsson.fmradio"))
+		if (!lpparam.packageName.equals("com.android.fmradio"))
 			return;
 
 		XposedBridge.log("inside FMRadio!");
 
-		findAndHookMethod("com.sonyericsson.fmradio.service.PhfHandler",
-				lpparam.classLoader, "isPhfConnected", new XC_MethodReplacement() {
+		findAndHookMethod("com.android.fmradio.FmMainActivity",
+				lpparam.classLoader, "isAntennaAvailable", new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
+                        return true;
+                    }
+                });
+
+		findAndHookMethod("com.android.fmradio.FmService",
+				lpparam.classLoader, "isAntennaAvailable", new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                         return true;
